@@ -1,5 +1,5 @@
 # Project2
-<b>Problem Definition:</b> 
+<b>Problem Definition:</b> </br>
 As described in class Gossip type algorithms can be used both for group communication and for aggregate computation. The goal of this project is to determine the convergence of such algorithms through a simulator based on actors written in Erlang. Since actors are fully asynchronous, the particular type of Gossip implemented is the so-called Asynchronous Gossip.
 
 <b>Gossip Algorithm for information propagation: </b>
@@ -25,3 +25,12 @@ The actual network topology plays a critical role in the dissemination speed of 
 - 2D Grid: Actors form a 2D grid. The actors can only talk to the grid neighbors
 - Line: Actors are arranged in a line. Each actor has only 2 neighbors (one left and one right, unless you are the first or last actor).
 - Imperfect 3D Grid: Grid arrangement but one random other neighbor is selected from the list of all actors (8+1 neighbors).
+</br>
+<b> Input: </b> 
+The input provided (as a command line to your project2) will be of the form:</br>
+project2 numNodes topology algorithm</br>
+Where, numNodes is the number of actors involved (for 2D-based topologies you can round up until you get a square), topology is one of full, 2D, line, imp2D, the algorithm is one of gossip, push-sum.
+</br>
+</br>
+<b> Output:</b> 
+Print the amount of time it took to achieve convergence of the algorithm. 
