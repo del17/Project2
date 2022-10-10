@@ -1,4 +1,7 @@
 # Project2
+
+#https://docs.google.com/document/d/1eShukKEbx9Ug9WYU2wLlAkJ3rHSYixGzxMl6kh81o3w/edit
+
 <b>Problem Definition:</b> </br>
 As described in class Gossip type algorithms can be used both for group communication and for aggregate computation. The goal of this project is to determine the convergence of such algorithms through a simulator based on actors written in Erlang. Since actors are fully asynchronous, the particular type of Gossip implemented is the so-called Asynchronous Gossip.
 
