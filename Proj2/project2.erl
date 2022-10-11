@@ -37,7 +37,9 @@ main() ->
                     pushsum:s(RoundNumNodes, B, Topology)
             end;
         _->
-            StartingNodeNN=rand:uniform(NumOfNodes),
+            StartingNodeNN = rand:uniform(NumOfNodes),
+            io:fwrite("StartingNodeNN = ~p", [StartingNodeNN]), 
+            % StartingNodeNN = string:strip(StartingNodeMN,left,$\00),
             case Algo of
                 "Gossip"->
                     % Messages = [],
@@ -48,8 +50,8 @@ main() ->
                     global:register_name("nodeMaster", Pid1),
                     global:sync(),
                     io:fwrite("Node PID1= ~p", [Pid1]),  
-                    % NodeName=list_to_atom(string:concat("node",[StartingNodeNN])),  
-                    NodeName = list_to_atom("node4"), 
+                    NodeName=list_to_atom(string:concat("node",integer_to_list(StartingNodeNN))),  
+                    io:fwrite("Node = ~p", [NodeName]),    
                     io:fwrite("Node = ~p", [global:whereis_name(NodeName)]),             
                     gossip:add_message({global:whereis_name(NodeName), "Gossip", StartingNodeNN, Topology, NumOfNodes}),
                     io:fwrite("B: ~p" , [B]),

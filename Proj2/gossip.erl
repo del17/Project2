@@ -1,6 +1,7 @@
 -module(gossip).
 % -behaviour(gen_server).
 -export([start_link/1, add_message/1, s/3, init/1, handle_cast/2,createNodes/1]).
+% -import(whiteList,[get_whitelist/1]).
 
 % -import(string, [to_atom/2]).
 % -export([start/3]).
@@ -22,7 +23,8 @@ add_message({Pid, Message, Number, Topo, NumNodes}) ->
     gen_server:cast(Pid, {add_message, {Pid, Message, Number, Topo, NumNodes}}).
 
 s(N, B, Topo) ->
-    Blacklist = masterNode:get_blacklist(global:whereis_name("nodeMaster")),
+    Messages = [],
+    Blacklist = masterNode:get_blacklist({global:whereis_name("nodeMaster"), 999999, Topo, Messages}),
     % Blacklist = masterNode:get_blacklist("nodeMaster"),
     io:fwrite("Blcklist: ~w" , [Blacklist]),
     Bllen = length(Blacklist),           %not sure about this as kernel:length ???
@@ -42,8 +44,7 @@ s(N, B, Topo) ->
             % Process.exit(self(),:kill)
             exit(self(),kill);
         true ->
-            io:fwrite("wrong"),
-            exit(self(),kill)
+            io:fwrite("wrong")
     end,
     s(N, B, Topo).
 
@@ -58,16 +59,22 @@ handle_cast({add_message, {Pid, New_message, Number, Topo, NumNodes}}, Messages)
     if 
         Messages == 9 ->
             io:fwrite("Added blacklist -- Handle cast"),
-            masterNode:add_blacklist(Pid, Number);
+            masterNode:add_blacklist(global:whereis_name("nodeMaster"), Number);
         true ->
             continue
     end,
-    io:fwrite("Added whitelist -- Handle cast"),
-    R = masterNode:get_whitelist(Pid, Number, Topo, NumNodes),
+    io:fwrite("Added whitelist -- Handle cast ~p ~p" ,[global:whereis_name("nodeMaster"), Pid] ),
+
+    % R = masterNode:get_whitelist({global:whereis_name("nodeMaster"), Number, Topo, NumNodes}),
+    % WhitelistNodeName = list_to_atom("nodeMaster"),
+    % R = masterNode:get_whitelist({WhitelistNodeName, Number, Topo, NumNodes}),
+
+    % R = whiteList:get_whitelist([global:whereis_name("nodeMaster"), Number, Topo, NumNodes]),
+    R = masterNode:get_blacklist({global:whereis_name("nodeMaster"), Number, Topo, NumNodes}),
     io:fwrite("R ~p", [R]),
     NodeName = list_to_atom(string:concat("node",[R])),
-    timer:sleep(1),
-    gossip:add_message(global:whereis_name(NodeName), New_message, R, Topo, NumNodes),
+    timer:sleep(1000),
+    gossip:add_message({global:whereis_name(NodeName), New_message, R, Topo, NumNodes}),
     {noreply, Messages+1}.
 
 
